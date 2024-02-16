@@ -1,0 +1,38 @@
+{
+    "id": "fudge-any-roll",
+    "title": "Fudge Any Roll",
+    "description": "",
+    "version": "1.0.0",
+    "compatibility": {
+        "minimum": "11",
+        "verified": "11"
+    },
+    "authors": [
+        {
+            "name": "enso",
+            "discord": "enso#0361"
+        }
+    ],
+    "esmodules": [
+        "/scripts/fudge-any-roll.js"
+    ],
+    "styles": [
+        "./styles/fudge-any-roll.css"
+    ],
+    "relationships": {
+        "requires": [
+            {
+                "id": "lib-wrapper",
+                "type": "module",
+                "compatibility": {
+                    "minimum": "1",
+                    "verified": "1.12.13.0"
+                }
+            }
+        ]
+    },
+    "socket": true,
+    "url": "",
+    "manifest": "",
+    "download": ""
+}

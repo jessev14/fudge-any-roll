@@ -1,0 +1,77 @@
+<form>
+
+    <div class="left-column">
+
+        <div class="users">
+            <h3>Target User</h3>
+            <select class="user-select">
+                {{#each users as |user id|}}
+                <option value="{{user.id}}">{{user.name}}</option>
+                {{/each}}
+            </select>
+        </div>
+
+        <div class="type">
+            <h3>Fudge Type</h3>
+            <div>
+                <label>
+                    <input type="radio" name="fudge-type" value="Total" checked />
+                    Total
+                </label>
+            </div>
+            <div>
+                <label>
+                    <input type="radio" name="fudge-type" value="Raw" />
+                    Raw
+                </label>
+            </div>
+        </div>
+
+        <div class="rule">
+            <h3>Rule</h3>
+            <div class="rule-config">
+                d
+                <input id="die-input" type="number" placeholder="20" />
+                <select class="operator-select">
+                    <option value=">">&gt;</option>
+                    <option value=">=">&gt;=</option>
+                    <option value="<">&lt;</option>
+                    <option value="<=">&lt;=</option>
+                    <option value="=">=</option>
+                </select>
+                <input id="value-input" type="number" placeholder="result" />
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button class='create' type="button">Create Fudge</button>
+        </div>
+
+    </div>
+
+    <div class="right-column">
+
+        <h3>Fudges</h3>
+
+        <table>
+            <tr>
+                <th>User</th>
+                <th>Type</th>
+                <th>Rule</th>
+                <th>Active</th>
+            </tr>
+
+            {{#each fudges as |fudge id|}}
+            <tr>
+                <td>{{fudge.userName}}</td>
+                <td>{{fudge.type}}</td>
+                <td>{{fudge.rule}}</td>
+                <td><input type="checkbox" name="{{fudge.id}}" {{checked fudge.active}} /></td>
+                <td><a class="delete-button"><i class="fas fa-trash"></i></a></td>
+            </tr>
+            {{/each}}
+        </table>
+
+    </div>
+
+</form>

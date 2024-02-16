@@ -1,0 +1,25 @@
+#fudge-any-roll-config form {
+    display: flex;
+}
+
+#fudge-any-roll-config form div {
+    flex: 50%;
+}
+
+#fudge-any-roll-config div.left-column > div {
+    margin-bottom: 15px;
+}
+
+
+#fudge-any-roll-config div.left-column div.rule div.rule-config {
+    display: flex;
+    align-items: center;
+}
+
+#fudge-any-roll-config div.left-column div.rule div.rule-config * {
+    flex: 1;
+}
+
+#fudge-any-roll-config div.right-column table {
+    text-align: center;
+}
