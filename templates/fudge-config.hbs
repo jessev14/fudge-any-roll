@@ -31,7 +31,7 @@
             <h3>Rule</h3>
             <div class="rule-config">
                 d
-                <input id="die-input" type="number" placeholder="20" />
+                <input class="die-input" type="number" placeholder="20" />
                 <select class="operator-select">
                     <option value=">">&gt;</option>
                     <option value=">=">&gt;=</option>
@@ -39,7 +39,7 @@
                     <option value="<=">&lt;=</option>
                     <option value="=">=</option>
                 </select>
-                <input id="value-input" type="number" placeholder="result" />
+                <input class="value-input" type="number" placeholder="result" />
             </div>
         </div>
 
@@ -62,7 +62,7 @@
             </tr>
 
             {{#each fudges as |fudge id|}}
-            <tr>
+            <tr data-fudge-id="{{fudge.id}}">
                 <td>{{fudge.userName}}</td>
                 <td>{{fudge.type}}</td>
                 <td>{{fudge.rule}}</td>
