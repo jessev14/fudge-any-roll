@@ -42,30 +42,41 @@ Hooks.on('preCreateChatMessage', (chatMessage, chatData, options, userID) => {
 
     const { rolls } = chatMessage;
     if (!rolls.length) return true;
-    if (rolls.some(r => r.dice.length > 1)) return true;
 
     const fudges = game.settings.get(moduleID, 'fudges').filter(f => f.active && f.user === userID);
     if (!fudges.length) return true;
 
-    fudgeRoll(chatData, options, fudges, rolls);
+    fudgeRoll(chatData, options, rolls, userID);
     return false;
 });
 
 
-async function fudgeRoll(chatData, options, fudges, rolls) {
-    const newRolls = [];
-    let roll = rolls[0];
-    const targetFudge = fudges.find(f => f.d === roll.dice[0].faces);
-    let counter = 0;
-    while (checkApplyFudge(targetFudge, targetFudge.type === 'total' ? roll.total : roll.dice[0].total)) {
-        if (counter > 1000) break;
+async function fudgeRoll(chatData, options, rolls, userID) {
+    const fudges = game.settings.get(moduleID, 'fudges');
+    for (const roll of rolls) {
+        roll._evaluated = false;
+        for (const die of roll.dice) {
+            for (let i = 0; i < die.number; i++) {
+                const targetFudge = fudges.find(f => f.active && f.user === userID && f.d === die.faces);
+                if (!targetFudge) break;
 
-        roll = await roll.reroll();
+                let newDieRoll, counter = 0;
+                while (checkApplyFudge(targetFudge, die.results[i].result)) {
+                    if (counter > 1000) break;
+
+                    newDieRoll = await new Roll(`1d${die.faces}`).roll();
+                    const res = newDieRoll.dice[0].results[0].result;
+                    die.results[i].result = res;
+                }
+                targetFudge.active = false;
+            }
+        }
+        await roll.roll();
     }
-    newRolls.push(roll);
-    if (newRolls.length) chatData.rolls = newRolls;
+    chatData.rolls = rolls;
     chatData.fudged = true;
 
+    await game.settings.set(moduleID, 'fudges', fudges);
     return ChatMessage.create(chatData, options);
 }
 

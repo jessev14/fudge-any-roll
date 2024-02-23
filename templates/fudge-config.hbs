@@ -11,7 +11,7 @@
             </select>
         </div>
 
-        <div class="type">
+        {{!-- <div class="type">
             <h3>Fudge Type</h3>
             <div>
                 <label>
@@ -25,7 +25,7 @@
                     Raw
                 </label>
             </div>
-        </div>
+        </div> --}}
 
         <div class="rule">
             <h3>Rule</h3>
@@ -56,7 +56,7 @@
         <table>
             <tr>
                 <th>User</th>
-                <th>Type</th>
+                {{!-- <th>Type</th> --}}
                 <th>Rule</th>
                 <th>Active</th>
             </tr>
@@ -64,7 +64,7 @@
             {{#each fudges as |fudge id|}}
             <tr data-fudge-id="{{fudge.id}}">
                 <td>{{fudge.userName}}</td>
-                <td>{{fudge.type}}</td>
+                {{!-- <td>{{fudge.type}}</td> --}}
                 <td>{{fudge.rule}}</td>
                 <td><input type="checkbox" name="{{fudge.id}}" {{checked fudge.active}} /></td>
                 <td><a class="delete-button"><i class="fas fa-trash"></i></a></td>

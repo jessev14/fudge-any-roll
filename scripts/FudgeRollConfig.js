@@ -15,7 +15,7 @@ export class FudgeRollConfig extends FormApplication {
         });
     }
 
-    getData(options = {}) {
+    getData() {
         const data = {};
         data.fudges = game.settings.get(moduleID, 'fudges');
         for (const fudge of data.fudges) {
@@ -32,17 +32,15 @@ export class FudgeRollConfig extends FormApplication {
         createButton.onclick = async () => {
             const id = Date.now();
             const user = html.querySelector('select.user-select').value;
-            const type = html.querySelector('input[name="fudge-type"]:checked').value;
+            // const type = html.querySelector('input[name="fudge-type"]:checked').value;
             const d = html.querySelector('input.die-input').value || 20;
             const operator = html.querySelector('select.operator-select').value;
             const value = html.querySelector('input.value-input').value;
 
             if (!d || !Number.isNumeric(value)) return ui.notifications.error('Invalid fudge rule.');
 
-            const newFudge = { id, user, type, d, operator, value, active: true };
+            const newFudge = { id, user, d, operator, value, active: true };
             const fudges = game.settings.get(moduleID, 'fudges');
-            const conflictingFudges = fudges.filter(f => (f.user === user) && (f.d === d) && f.active);
-            if (conflictingFudges.length) return ui.notifications.error('A conflicting fudge rule (same user and same die) is currently active.');
 
             fudges.push(newFudge);
             await game.settings.set(moduleID, 'fudges', fudges);
@@ -76,17 +74,10 @@ export class FudgeRollConfig extends FormApplication {
                 const targetFudge = fudges.find(f => f.id === fudgeID);
                 if (!targetFudge) return;
 
-                const conflictingFudges = fudges.filter(f => (f.user === targetFudge.user) && (f.d === targetFudge.d) && f.active);
-                if (conflictingFudges.length && target.checked) {
-                    ui.notifications.error('A conflicting fudge rule (same user and same die) is currently active.');
-                    return target.checked = false;
-                }
-
                 targetFudge.active = target.checked;
                 await game.settings.set(moduleID, 'fudges', fudges);
                 return this.render(true);
             }
-
         };
     }
 }
