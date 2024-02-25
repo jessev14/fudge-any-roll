@@ -19,7 +19,8 @@ Hooks.once('init', () => {
      */
     game.settings.register(moduleID, 'fudges', {
         scope: 'world',
-        type: Array
+        type: Array,
+        default: []
     });
 
     Handlebars.registerHelper('add', function(a, b) {
