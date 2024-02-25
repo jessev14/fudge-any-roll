@@ -1,7 +1,7 @@
 {
     "id": "fudge-any-roll",
     "title": "Fudge Any Roll",
-    "description": "",
+    "description": "System-agnostic roll fudging.",
     "version": "1.0.0",
     "compatibility": {
         "minimum": "11",
@@ -20,16 +20,6 @@
         "./styles/fudge-any-roll.css"
     ],
     "relationships": {
-        "requires": [
-            {
-                "id": "lib-wrapper",
-                "type": "module",
-                "compatibility": {
-                    "minimum": "1",
-                    "verified": "1.12.13.0"
-                }
-            }
-        ]
     },
     "socket": true,
     "url": "",
