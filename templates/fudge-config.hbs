@@ -55,6 +55,7 @@
 
         <table>
             <tr>
+                <th>#</th>
                 <th>User</th>
                 {{!-- <th>Type</th> --}}
                 <th>Rule</th>
@@ -63,6 +64,7 @@
 
             {{#each fudges as |fudge id|}}
             <tr data-fudge-id="{{fudge.id}}">
+                <td>{{add @index 1}}</td>
                 <td>{{fudge.userName}}</td>
                 {{!-- <td>{{fudge.type}}</td> --}}
                 <td>{{fudge.rule}}</td>

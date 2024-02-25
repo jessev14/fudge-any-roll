@@ -21,6 +21,10 @@ Hooks.once('init', () => {
         scope: 'world',
         type: Array
     });
+
+    Handlebars.registerHelper('add', function(a, b) {
+        return a + b;
+    } )
 });
 
 
