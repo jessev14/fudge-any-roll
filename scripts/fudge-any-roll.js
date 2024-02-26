@@ -30,7 +30,6 @@ Hooks.once('init', () => {
     });
     
     game.socket.on(`module.${moduleID}`, fudges => {
-        lg({fudges})
         if (game.user !== game.users.activeGM) return;
     
         return game.settings.set(moduleID, 'fudges', fudges);
@@ -59,18 +58,17 @@ async function fudgeRoll(wrapped, ...args) {
     this._evaluated = false;
     for (const die of this.dice) {
         for (let i = 0; i < die.number; i++) {
-            const targetFudge = fudges.find(f => f.active && f.user === game.user.id && f.d === die.faces);
+            const targetFudge = fudges.find(f => f.active && (f.user === 'any' || f.user === game.user.id) && f.d === die.faces);
             if (!targetFudge) break;
 
             let newDieRoll, counter = 0;
-            while (checkApplyFudge(targetFudge, die.results[i].result)) {
+            while (!checkApplyFudge(targetFudge, die.results[i].result)) {
                 if (counter > 1000) break;
 
                 newDieRoll = new Roll(`1d${die.faces}`);
                 newDieRoll.fudged = true;
                 await newDieRoll.roll();
-                const res = newDieRoll.dice[0].results[0].result;
-                die.results[i].result = res;
+                die.results[i].result = newDieRoll.dice[0].results[0].result;
             }
             targetFudge.active = false;
         }
@@ -85,11 +83,15 @@ async function fudgeRoll(wrapped, ...args) {
 
 function checkApplyFudge(fudge, res) {
     const { operator, value } = fudge;
-
-    if (operator.includes('=') && res === value) return false;
-    if (operator.includes('<') && res < value) return false;
-    if (operator.includes('>') && res > value) return false;
-
-    return true;
+    switch (operator) {
+        case '>':
+            return res > value;
+        case '>=':
+            return res >= value;
+        case '<':
+            return res < value;
+        case '<=':
+            return res <= value;
+        case '=':
+            return res === value;
 }
-
