@@ -27,10 +27,10 @@ Hooks.once('init', () => {
     Handlebars.registerHelper('add', function (a, b) {
         return a + b;
     });
-    
+
     game.socket.on(`module.${moduleID}`, fudges => {
         if (game.user !== game.users.activeGM) return;
-    
+
         return game.settings.set(moduleID, 'fudges', fudges);
     });
 });
@@ -93,4 +93,5 @@ function checkApplyFudge(fudge, res) {
             return res <= value;
         case '=':
             return res === value;
+    }
 }
