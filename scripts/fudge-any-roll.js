@@ -53,8 +53,8 @@ async function fudgeRoll(wrapped, ...args) {
     const res = await wrapped(...args);
     if (this.fudged) return res;
 
-    const fudges = game.settings.get(moduleID, 'fudges');
     this._evaluated = false;
+    const fudges = game.settings.get(moduleID, 'fudges');
     for (const die of this.dice) {
         for (let i = 0; i < die.number; i++) {
             const targetFudge = fudges.find(f => f.active && (f.user === 'any' || f.user === game.user.id) && f.d === die.faces);
