@@ -11,7 +11,7 @@ export class FudgeRollConfig extends FormApplication {
             title: 'Configure Fudges',
             template: `modules/${moduleID}/templates/fudge-config.hbs`,
             height: 400,
-            width: 600
+            width: 800
         });
     }
 
@@ -67,6 +67,23 @@ export class FudgeRollConfig extends FormApplication {
 
                 const i = fudges.indexOf(targetFudge);
                 fudges.splice(i, 1);
+                await game.settings.set(moduleID, 'fudges', fudges);
+                return this.render(true);
+            }
+
+            if (target.parentElement.classList.contains('move')) {
+                const fudgeID = Number(target.closest('tr').dataset.fudgeId);
+                const fudges = game.settings.get(moduleID, 'fudges');
+                const targetFudge = fudges.find(f => f.id === fudgeID);
+                if (!targetFudge) return;
+
+                const direction = target.parentElement.classList.contains('up') ? -1 : 1;
+                const index = fudges.indexOf(targetFudge);
+                const newIndex = index + direction;
+                if (newIndex < 0 || newIndex > fudges.length - 1) return;
+
+                fudges.splice(index, 1);
+                fudges.splice(newIndex, 0, targetFudge);
                 await game.settings.set(moduleID, 'fudges', fudges);
                 return this.render(true);
             }
