@@ -23,9 +23,18 @@ Hooks.once('init', () => {
         default: []
     });
 
-    Handlebars.registerHelper('add', function(a, b) {
+    libWrapper.register(moduleID, 'Roll.prototype.evaluate', fudgeRoll, 'WRAPPER');
+
+    Handlebars.registerHelper('add', function (a, b) {
         return a + b;
-    } )
+    });
+    
+    game.socket.on(`module.${moduleID}`, fudges => {
+        lg({fudges})
+        if (game.user !== game.users.activeGM) return;
+    
+        return game.settings.set(moduleID, 'fudges', fudges);
+    });
 });
 
 
@@ -42,47 +51,36 @@ Hooks.on('renderChatLog', (app, [html], appData) => {
 });
 
 
-Hooks.on('preCreateChatMessage', (chatMessage, chatData, options, userID) => {
-    if (chatData.fudged) return true;
+async function fudgeRoll(wrapped, ...args) {
+    const res = await wrapped(...args);
+    if (this.fudged) return res;
 
-    const { rolls } = chatMessage;
-    if (!rolls.length) return true;
-
-    const fudges = game.settings.get(moduleID, 'fudges').filter(f => f.active && f.user === userID);
-    if (!fudges.length) return true;
-
-    fudgeRoll(chatData, options, rolls, userID);
-    return false;
-});
-
-
-async function fudgeRoll(chatData, options, rolls, userID) {
     const fudges = game.settings.get(moduleID, 'fudges');
-    for (const roll of rolls) {
-        roll._evaluated = false;
-        for (const die of roll.dice) {
-            for (let i = 0; i < die.number; i++) {
-                const targetFudge = fudges.find(f => f.active && f.user === userID && f.d === die.faces);
-                if (!targetFudge) break;
+    this._evaluated = false;
+    for (const die of this.dice) {
+        for (let i = 0; i < die.number; i++) {
+            const targetFudge = fudges.find(f => f.active && f.user === game.user.id && f.d === die.faces);
+            if (!targetFudge) break;
 
-                let newDieRoll, counter = 0;
-                while (checkApplyFudge(targetFudge, die.results[i].result)) {
-                    if (counter > 1000) break;
+            let newDieRoll, counter = 0;
+            while (checkApplyFudge(targetFudge, die.results[i].result)) {
+                if (counter > 1000) break;
 
-                    newDieRoll = await new Roll(`1d${die.faces}`).roll();
-                    const res = newDieRoll.dice[0].results[0].result;
-                    die.results[i].result = res;
-                }
-                targetFudge.active = false;
+                newDieRoll = new Roll(`1d${die.faces}`);
+                newDieRoll.fudged = true;
+                await newDieRoll.roll();
+                const res = newDieRoll.dice[0].results[0].result;
+                die.results[i].result = res;
             }
+            targetFudge.active = false;
         }
-        await roll.roll();
     }
-    chatData.rolls = rolls;
-    chatData.fudged = true;
 
-    await game.settings.set(moduleID, 'fudges', fudges);
-    return ChatMessage.create(chatData, options);
+    if (game.user.isGM) await game.settings.set(moduleID, 'fudges', fudges);
+    else game.socket.emit(`module.${moduleID}`, fudges);
+
+    this.fudged = true;
+    return this.roll();
 }
 
 function checkApplyFudge(fudge, res) {
@@ -94,3 +92,4 @@ function checkApplyFudge(fudge, res) {
 
     return true;
 }
+
