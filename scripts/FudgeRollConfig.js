@@ -36,7 +36,6 @@ export class FudgeRollConfig extends FormApplication {
         createButton.onclick = async () => {
             const id = Date.now();
             const user = html.querySelector('select.user-select').value;
-            // const type = html.querySelector('input[name="fudge-type"]:checked').value;
             const d = Number(html.querySelector('input.die-input').value || 20);
             const operator = html.querySelector('select.operator-select').value;
             const value = html.querySelector('input.value-input').value;
