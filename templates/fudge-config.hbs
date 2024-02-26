@@ -11,22 +11,6 @@
             </select>
         </div>
 
-        {{!-- <div class="type">
-            <h3>Fudge Type</h3>
-            <div>
-                <label>
-                    <input type="radio" name="fudge-type" value="Total" checked />
-                    Total
-                </label>
-            </div>
-            <div>
-                <label>
-                    <input type="radio" name="fudge-type" value="Raw" />
-                    Raw
-                </label>
-            </div>
-        </div> --}}
-
         <div class="rule">
             <h3>Rule</h3>
             <div class="rule-config">
@@ -57,7 +41,6 @@
             <tr>
                 <th>#</th>
                 <th>User</th>
-                {{!-- <th>Type</th> --}}
                 <th>Rule</th>
                 <th>Active</th>
             </tr>
@@ -66,7 +49,6 @@
             <tr data-fudge-id="{{fudge.id}}">
                 <td>{{add @index 1}}</td>
                 <td>{{fudge.userName}}</td>
-                {{!-- <td>{{fudge.type}}</td> --}}
                 <td>{{fudge.rule}}</td>
                 <td><input type="checkbox" name="{{fudge.id}}" {{checked fudge.active}} /></td>
                 <td><a class="delete-button"><i class="fas fa-trash"></i></a></td>
