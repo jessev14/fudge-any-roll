@@ -23,6 +23,10 @@ export class FudgeRollConfig extends FormApplication {
             fudge.rule = `d${fudge.d} ${fudge.operator} ${fudge.value}`;
         }
         data.users = game.users.contents;
+        data.users.push({
+            id: 'any',
+            name: 'Any User'
+        });
 
         return data;
     }
