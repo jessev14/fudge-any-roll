@@ -9,7 +9,6 @@ Hooks.once('init', () => {
     /**
      * fudge = {
      *  id: '20240221',
-     *  type: 'total',
      *  d: 20,
      *  operator: '>=',
      *  value: 18,
