@@ -1,0 +1,25 @@
+#too-many-faces-config form {
+    display: flex;
+}
+
+#too-many-faces-config form div {
+    flex: 50%;
+}
+
+#too-many-faces-config div.left-column > div {
+    margin-bottom: 15px;
+}
+
+
+#too-many-faces-config div.left-column div.rule div.rule-config {
+    display: flex;
+    align-items: center;
+}
+
+#too-many-faces-config div.left-column div.rule div.rule-config * {
+    flex: 1;
+}
+
+#too-many-faces-config div.right-column table {
+    text-align: center;
+}

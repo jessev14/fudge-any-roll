@@ -1,7 +1,7 @@
 {
-    "id": "fudge-any-roll",
-    "title": "Fudge Any Roll",
-    "description": "System-agnostic roll fudging.",
+    "id": "too-many-faces",
+    "title": "Too Many Faces",
+    "description": "",
     "version": "1.0.0",
     "compatibility": {
         "minimum": "11",
@@ -14,10 +14,10 @@
         }
     ],
     "esmodules": [
-        "/scripts/fudge-any-roll.js"
+        "/scripts/main.js"
     ],
     "styles": [
-        "./styles/fudge-any-roll.css"
+        "./styles/style.css"
     ],
     "relationships": {
         "requires": [

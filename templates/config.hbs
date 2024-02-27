@@ -28,14 +28,14 @@
         </div>
 
         <div class="buttons">
-            <button class='create' type="button">Create Fudge</button>
+            <button class='create' type="button">Create Rule</button>
         </div>
 
     </div>
 
     <div class="right-column">
 
-        <h3>Fudges</h3>
+        <h3>Rules</h3>
 
         <table>
             <tr>
@@ -45,12 +45,12 @@
                 <th>Active</th>
             </tr>
 
-            {{#each fudges as |fudge id|}}
-            <tr data-fudge-id="{{fudge.id}}">
+            {{#each rules as |rule id|}}
+            <tr data-rule-id="{{rule.id}}">
                 <td>{{add @index 1}}</td>
-                <td>{{fudge.userName}}</td>
-                <td>{{fudge.rule}}</td>
-                <td><input type="checkbox" name="{{fudge.id}}" {{checked fudge.active}} /></td>
+                <td>{{rule.userName}}</td>
+                <td>{{rule.rule}}</td>
+                <td><input type="checkbox" name="{{rule.id}}" {{checked rule.active}} /></td>
                 <td>
                     <a class="move up"><i class="fa-solid fa-angle-up"></i></a>
                     <a class="move down"><i class="fa-solid fa-angle-down"></i></a>

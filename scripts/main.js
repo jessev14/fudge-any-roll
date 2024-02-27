@@ -1,6 +1,6 @@
-import { FudgeRollConfig } from './FudgeRollConfig.js';
+import { Config } from './Config.js';
 
-export const moduleID = 'fudge-any-roll';
+export const moduleID = 'too-many-faces';
 
 export const lg = x => console.log(x);
 
@@ -16,22 +16,22 @@ Hooks.once('init', () => {
      *  active: true    
      * }
      */
-    game.settings.register(moduleID, 'fudges', {
+    game.settings.register(moduleID, 'rules', {
         scope: 'world',
         type: Array,
         default: []
     });
 
-    libWrapper.register(moduleID, 'Roll.prototype.evaluate', fudgeRoll, 'WRAPPER');
+    libWrapper.register(moduleID, 'Roll.prototype.evaluate', ruleRoll, 'WRAPPER');
 
     Handlebars.registerHelper('add', function (a, b) {
         return a + b;
     });
 
-    game.socket.on(`module.${moduleID}`, fudges => {
+    game.socket.on(`module.${moduleID}`, rules => {
         if (game.user !== game.users.activeGM) return;
 
-        return game.settings.set(moduleID, 'fudges', fudges);
+        return game.settings.set(moduleID, 'rules', rules);
     });
 });
 
@@ -40,49 +40,49 @@ Hooks.on('renderChatLog', (app, [html], appData) => {
     if (!game.user.isGM) return;
 
     const chatControls = html.querySelector('#chat-controls');
-    const fudgeConfigButton = document.createElement('label');
-    fudgeConfigButton.classList.add('chat-control-icon');
-    fudgeConfigButton.innerHTML = `<a><i class="fas fa-poop"></i></a>`;
-    fudgeConfigButton.onclick = () => new FudgeRollConfig().render(true);
+    const ruleConfigButton = document.createElement('label');
+    ruleConfigButton.classList.add('chat-control-icon');
+    ruleConfigButton.innerHTML = `<a><i class="fas fa-poop"></i></a>`;
+    ruleConfigButton.onclick = () => new Config().render(true);
 
-    chatControls.prepend(fudgeConfigButton);
+    chatControls.prepend(ruleConfigButton);
 });
 
 
-async function fudgeRoll(wrapped, ...args) {
+async function ruleRoll(wrapped, ...args) {
     const res = await wrapped(...args);
-    if (this.fudged) return res;
+    if (this.ruled) return res;
 
     this._evaluated = false;
-    const fudges = game.settings.get(moduleID, 'fudges');
+    const rules = game.settings.get(moduleID, 'rules');
     for (const die of this.dice) {
         for (let i = 0; i < die.number; i++) {
-            const targetFudge = fudges.find(f => f.active && (f.user === 'any' || f.user === game.user.id) && f.d === die.faces);
-            if (!targetFudge) break;
+            const targetRule = rules.find(r => r.active && (r.user === 'any' || r.user === game.user.id) && r.d === die.faces);
+            if (!targetRule) break;
 
             let newDieRoll, counter = 0;
-            while (!checkApplyFudge(targetFudge, die.results[i].result)) {
+            while (!checkApplyRule(targetRule, die.results[i].result)) {
                 if (counter > 1000) break;
 
                 newDieRoll = new Roll(`1d${die.faces}`);
-                newDieRoll.fudged = true;
+                newDieRoll.ruled = true;
                 await newDieRoll.roll();
                 die.results[i].result = newDieRoll.dice[0].results[0].result;
                 counter++;
             }
-            targetFudge.active = false;
+            targetRule.active = false;
         }
     }
 
-    if (game.user.isGM) await game.settings.set(moduleID, 'fudges', fudges);
-    else game.socket.emit(`module.${moduleID}`, fudges);
+    if (game.user.isGM) await game.settings.set(moduleID, 'rules', rules);
+    else game.socket.emit(`module.${moduleID}`, rules);
 
-    this.fudged = true;
+    this.ruled = true;
     return this.roll();
 }
 
-function checkApplyFudge(fudge, res) {
-    const { operator, value } = fudge;
+function checkApplyRule(rule, res) {
+    const { operator, value } = rule;
     switch (operator) {
         case '>':
             return res > value;
