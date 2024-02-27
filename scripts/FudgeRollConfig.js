@@ -19,7 +19,7 @@ export class FudgeRollConfig extends FormApplication {
         const data = {};
         data.fudges = game.settings.get(moduleID, 'fudges');
         for (const fudge of data.fudges) {
-            fudge.userName = game.users.get(fudge.user).name;
+            fudge.userName = game.users.get(fudge.user)?.name || 'Any User';
             fudge.rule = `d${fudge.d} ${fudge.operator} ${fudge.value}`;
         }
         data.users = game.users.contents;
@@ -38,7 +38,7 @@ export class FudgeRollConfig extends FormApplication {
             const user = html.querySelector('select.user-select').value;
             const d = Number(html.querySelector('input.die-input').value || 20);
             const operator = html.querySelector('select.operator-select').value;
-            const value = html.querySelector('input.value-input').value;
+            const value = Number(html.querySelector('input.value-input').value);
 
             if (!d || !Number.isNumeric(value)) return ui.notifications.error('Invalid fudge rule.');
 

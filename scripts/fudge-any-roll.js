@@ -68,6 +68,7 @@ async function fudgeRoll(wrapped, ...args) {
                 newDieRoll.fudged = true;
                 await newDieRoll.roll();
                 die.results[i].result = newDieRoll.dice[0].results[0].result;
+                counter++;
             }
             targetFudge.active = false;
         }
