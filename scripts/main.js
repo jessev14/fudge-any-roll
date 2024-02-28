@@ -7,7 +7,7 @@ export const lg = x => console.log(x);
 
 Hooks.once('init', () => {
     /**
-     * fudge = {
+     * rule = {
      *  id: '20240221',
      *  d: 20,
      *  operator: '>=',
